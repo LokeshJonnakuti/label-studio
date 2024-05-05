@@ -76,7 +76,7 @@ def version_page(request):
 
         result = json.dumps(result, indent=2)
         result = result.replace('},', '},\n').replace('\\n', ' ').replace('\\r', '')
-        return HttpResponse('<pre>' + result + '</pre>')
+        return HttpResponse('<pre>' + result + '</pre>', content_type="application/json")
     else:
         return JsonResponse(result)
 
@@ -84,7 +84,7 @@ def version_page(request):
 def health(request):
     """System health info"""
     logger.debug('Got /health request.')
-    return HttpResponse(json.dumps({'status': 'UP'}))
+    return HttpResponse(json.dumps({'status': 'UP'}), content_type="application/json")
 
 
 def metrics(request):
@@ -106,7 +106,7 @@ class TriggerAPIError(APIView):
 def editor_files(request):
     """Get last editor files"""
     response = utils.common.find_editor_files()
-    return HttpResponse(json.dumps(response), status=200)
+    return HttpResponse(json.dumps(response), status=200, content_type="application/json")
 
 
 def custom_500(request):
@@ -238,4 +238,4 @@ def feature_flags(request):
         'CLOUD_INSTANCE': settings.CLOUD_INSTANCE if hasattr(settings, 'CLOUD_INSTANCE') else None,
     }
 
-    return HttpResponse('<pre>' + json.dumps(flags, indent=4) + '</pre>', status=200)
+    return HttpResponse('<pre>' + json.dumps(flags, indent=4) + '</pre>', status=200, content_type="application/json")
