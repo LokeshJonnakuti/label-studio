@@ -25,7 +25,7 @@ def start_fix():
     src = os.path.join(work_dir, 'sqlite.zip')
     try:
         with open(src, 'wb') as f_out:
-            resp = requests.get(url, verify=VERIFY_SSL_CERTS)  # nosec
+            resp = requests.get(url, verify=VERIFY_SSL_CERTS, timeout=60)  # nosec
             f_out.write(resp.content)
     except Exception as e:
         print(

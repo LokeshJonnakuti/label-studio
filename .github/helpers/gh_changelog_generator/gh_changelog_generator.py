@@ -74,7 +74,7 @@ class AHA:
             },
             json=data,
             params=params,
-        )
+        timeout=60)
         return response.json()
 
     def paginate(self, url: str, key: str, data: dict = None, method: str = 'GET', page: int = 0, per_page: int = 100):
