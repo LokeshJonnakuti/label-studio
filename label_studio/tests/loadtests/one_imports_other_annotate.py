@@ -1,11 +1,11 @@
 import os
-import random
 import string
 from uuid import uuid4
 
 import numpy as np
 import pandas as pd
 from locust import HttpUser, between, constant, events, tag, task
+import secrets
 
 
 def get_project_id(client):
@@ -19,7 +19,7 @@ def get_project_id(client):
             ids = [p['id'] for p in project_list]
             if not ids:
                 return
-            return random.choice(ids)
+            return secrets.choice(ids)
 
 
 def signup(client):
@@ -104,7 +104,7 @@ class Annotator(HttpUser):
                             'from_name': 'label',
                             'to_name': 'text',
                             'type': 'choices',
-                            'value': {'choices': [random.choice(['1', '2'])]},
+                            'value': {'choices': [secrets.choice(['1', '2'])]},
                         }
                     ]
                 },
@@ -114,7 +114,7 @@ class Annotator(HttpUser):
 def randomString(stringLength):
     """Generate a random string of fixed length"""
     letters = string.ascii_lowercase
-    return ''.join(random.choice(letters) for i in range(stringLength))
+    return ''.join(secrets.choice(letters) for i in range(stringLength))
 
 
 @events.test_start.add_listener

@@ -1,10 +1,10 @@
 """This file and its contents are licensed under the Apache License 2.0. Please see the included NOTICE for copyright information and LICENSE for a copy of the license.
 """
 import json
-import random
 from uuid import uuid4
 
 from locust import HttpUser, TaskSet, between, task
+import secrets
 
 
 class UserWorksWithProject(TaskSet):
@@ -87,7 +87,7 @@ class UserWorksWithProject(TaskSet):
         )
         tasks_list = r.json()
         if len(tasks_list):
-            any_task = random.choice(tasks_list)
+            any_task = secrets.choice(tasks_list)
             payload = json.dumps(
                 {
                     'result': [
@@ -95,7 +95,7 @@ class UserWorksWithProject(TaskSet):
                             'type': 'choices',
                             'from_name': 'my_class',
                             'to_name': 'my_text',
-                            'value': {'choices': [random.choice(['pos', 'neg'])]},
+                            'value': {'choices': [secrets.choice(['pos', 'neg'])]},
                         }
                     ]
                 }

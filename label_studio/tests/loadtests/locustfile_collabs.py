@@ -1,16 +1,16 @@
 """This file and its contents are licensed under the Apache License 2.0. Please see the included NOTICE for copyright information and LICENSE for a copy of the license.
 """
 import json
-import random
 import string
 
 from locust import HttpUser, TaskSet, between, task
+import secrets
 
 
 def randomString(stringLength):
     """Generate a random string of fixed length"""
     letters = string.ascii_lowercase
-    return ''.join(random.choice(letters) for i in range(stringLength))
+    return ''.join(secrets.choice(letters) for i in range(stringLength))
 
 
 all_labels = [
@@ -29,16 +29,16 @@ all_labels = [
 
 
 def get_result(text):
-    start = random.randint(0, len(text))
-    end = min(len(text), start + random.randint(3, 30))
+    start = secrets.SystemRandom().randint(0, len(text))
+    end = min(len(text), start + secrets.SystemRandom().randint(3, 30))
     results = []
-    for i in range(random.randint(1, 10)):
+    for i in range(secrets.SystemRandom().randint(1, 10)):
         results.append(
             {
                 'type': 'labels',
                 'from_name': 'ner',
                 'to_name': 'text',
-                'value': {'labels': [random.choice(all_labels)], 'start': start, 'end': end},
+                'value': {'labels': [secrets.choice(all_labels)], 'start': start, 'end': end},
             }
         )
     return results
@@ -48,7 +48,7 @@ class UserWorksWithProject(TaskSet):
     def on_start(self):
         r = self.client.get('/api/annotator/projects')
         all_projects = r.json()
-        self.project_id = random.choice(all_projects)
+        self.project_id = secrets.choice(all_projects)
 
     @task(100)
     def complete_task_via_api(self):
@@ -80,5 +80,5 @@ class WebsiteUser(HttpUser):
         response = self.client.get('/')
         csrftoken = response.cookies['csrftoken']
         num_collabs = 100
-        payload = {'email': f'collab_{random.randint(0, num_collabs)}@loadtests.me', 'password': '123456789'}
+        payload = {'email': f'collab_{secrets.SystemRandom().randint(0, num_collabs)}@loadtests.me', 'password': '123456789'}
         self.client.post('/annotator/login', payload, headers={'X-CSRFToken': csrftoken})

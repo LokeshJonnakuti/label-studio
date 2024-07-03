@@ -1,7 +1,6 @@
 """This file and its contents are licensed under the Apache License 2.0. Please see the included NOTICE for copyright information and LICENSE for a copy of the license.
 """
 import logging
-import random
 from collections import defaultdict
 
 import ujson as json
@@ -16,6 +15,7 @@ from io_storages.localfiles.models import LocalFilesImportStorage
 from io_storages.s3.models import S3ImportStorageLink
 from tasks.models import Annotation, Task
 from tasks.serializers import TaskSerializerBulk
+import secrets
 
 logger = logging.getLogger(__name__)
 all_permissions = AllPermissions()
@@ -317,7 +317,7 @@ def add_expression(queryset, size, value, value_name):
     # permutation sampling
     elif command == 'sample':
         assert len(args) == 0, "sample() doesn't have arguments"
-        values = random.sample(range(0, size), size)
+        values = secrets.SystemRandom().sample(range(0, size), size)
         for i, v in enumerate(values):
             tasks[i].data[value_name] = v
 
@@ -326,7 +326,7 @@ def add_expression(queryset, size, value, value_name):
         assert len(args) == 2, 'random(min, max) should have 2 args: min & max'
         minimum, maximum = int(args[0]), int(args[1])
         for i in range(size):
-            tasks[i].data[value_name] = random.randint(minimum, maximum)
+            tasks[i].data[value_name] = secrets.SystemRandom().randint(minimum, maximum)
 
     # sampling with choices and weights
     elif command == 'choices':
@@ -334,7 +334,7 @@ def add_expression(queryset, size, value, value_name):
             'choices(values:list, weights:list) ' 'should have 1 or 2 args: values & weights (default=None)'
         )
         weights = json.loads(args[1]) if len(args) == 2 else None
-        values = random.choices(population=json.loads(args[0]), weights=weights, k=size)
+        values = secrets.SystemRandom().choices(population=json.loads(args[0]), weights=weights, k=size)
         for i, v in enumerate(values):
             tasks[i].data[value_name] = v
 

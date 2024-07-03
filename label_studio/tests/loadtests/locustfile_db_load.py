@@ -1,17 +1,17 @@
 """This file and its contents are licensed under the Apache License 2.0. Please see the included NOTICE for copyright information and LICENSE for a copy of the license.
 """
 import json
-import random
 import string
 from uuid import uuid4
 
 from locust import HttpUser, TaskSet, between, task
+import secrets
 
 
 def randomString(stringLength):
     """Generate a random string of fixed length"""
     letters = string.ascii_lowercase
-    return ''.join(random.choice(letters) for i in range(stringLength))
+    return ''.join(secrets.choice(letters) for i in range(stringLength))
 
 
 class UserWorksWithProject(TaskSet):
@@ -42,7 +42,7 @@ class UserWorksWithProject(TaskSet):
         tasks = []
         for i in range(10000):
             one_task = {
-                'data': {'text': randomString(random.randint(5, 200))},
+                'data': {'text': randomString(secrets.SystemRandom().randint(5, 200))},
                 'annotations': [
                     {
                         'ground_truth': False,
@@ -51,7 +51,7 @@ class UserWorksWithProject(TaskSet):
                                 'type': 'choices',
                                 'from_name': 'my_class',
                                 'to_name': 'my_text',
-                                'value': {'choices': [random.choice(['pos', 'neg'])]},
+                                'value': {'choices': [secrets.choice(['pos', 'neg'])]},
                             }
                         ],
                     }
@@ -63,10 +63,10 @@ class UserWorksWithProject(TaskSet):
                                 'type': 'choices',
                                 'from_name': 'my_class',
                                 'to_name': 'my_text',
-                                'value': {'choices': [random.choice(['pos', 'neg'])]},
+                                'value': {'choices': [secrets.choice(['pos', 'neg'])]},
                             }
                         ],
-                        'score': random.uniform(0, 1),
+                        'score': secrets.SystemRandom().uniform(0, 1),
                     }
                 ],
             }
@@ -133,7 +133,7 @@ class UserWorksWithProject(TaskSet):
         )
         tasks_list = r.json()
         if len(tasks_list):
-            any_task = random.choice(tasks_list)
+            any_task = secrets.choice(tasks_list)
             payload = json.dumps(
                 {
                     'result': [
@@ -141,7 +141,7 @@ class UserWorksWithProject(TaskSet):
                             'type': 'choices',
                             'from_name': 'my_class',
                             'to_name': 'my_text',
-                            'value': {'choices': [random.choice(['pos', 'neg'])]},
+                            'value': {'choices': [secrets.choice(['pos', 'neg'])]},
                         }
                     ]
                 }
