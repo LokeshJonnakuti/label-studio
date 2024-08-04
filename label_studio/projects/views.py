@@ -56,5 +56,5 @@ def upload_example_using_config(request):
     except (ValueError, ValidationError, lxml.etree.Error):
         response = HttpResponse('error while example generating', status=status.HTTP_400_BAD_REQUEST)
     else:
-        response = HttpResponse(json.dumps(task_data))
+        response = HttpResponse(json.dumps(task_data), content_type="application/json")
     return response
