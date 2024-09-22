@@ -11,7 +11,6 @@ from contextlib import contextmanager
 from tempfile import mkdtemp, mkstemp
 
 import pkg_resources
-import requests
 import ujson as json
 import yaml
 from appdirs import user_cache_dir, user_config_dir, user_data_dir
@@ -20,6 +19,7 @@ from urllib3.util import parse_url
 
 # full path import results in unit test failures
 from .exceptions import InvalidUploadUrlError
+from security import safe_requests
 
 _DIR_APP_NAME = 'label-studio'
 
@@ -221,7 +221,7 @@ def ssrf_safe_get(url, *args, **kwargs):
     validate_upload_url(url, block_local_urls=settings.SSRF_PROTECTION_ENABLED)
     # Reason for #nosec: url has been validated as SSRF safe by the
     # validation check above.
-    response = requests.get(url, *args, **kwargs)   # nosec
+    response = safe_requests.get(url, *args, **kwargs)   # nosec
 
     # second check for SSRF for prevent redirect and dns rebinding attacks
     if settings.SSRF_PROTECTION_ENABLED:

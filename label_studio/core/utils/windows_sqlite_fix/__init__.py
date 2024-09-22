@@ -3,10 +3,10 @@ import os
 import sys
 
 import colorama
-import requests
 
 # NB: importing django.conf.settings did not work in this file
 from label_studio.core.settings.base import VERIFY_SSL_CERTS, WINDOWS_SQLITE_BINARY_HOST_PREFIX
+from security import safe_requests
 
 logger = logging.getLogger('main')
 
@@ -25,7 +25,7 @@ def start_fix():
     src = os.path.join(work_dir, 'sqlite.zip')
     try:
         with open(src, 'wb') as f_out:
-            resp = requests.get(url, verify=VERIFY_SSL_CERTS)  # nosec
+            resp = safe_requests.get(url, verify=VERIFY_SSL_CERTS)  # nosec
             f_out.write(resp.content)
     except Exception as e:
         print(

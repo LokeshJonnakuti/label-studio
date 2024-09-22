@@ -5,6 +5,7 @@ import re
 import requests
 from github import Github
 from jira import JIRA
+from security import safe_requests
 
 COMMIT_PATTERN = re.compile(r'^(\w*):\s*(.*?)?:\s*(.*?)\s*(\(#(\d+)\))?$')
 
@@ -279,7 +280,7 @@ def get_github_release_tasks(commits) -> list[AhaFeature]:
 def get_feature_flags() -> list[str]:
     result = []
     if LAUNCHDARKLY_SDK_KEY:
-        response = requests.get(
+        response = safe_requests.get(
             url="https://sdk.launchdarkly.com/sdk/latest-all",
             headers={
                 "Authorization": LAUNCHDARKLY_SDK_KEY,
