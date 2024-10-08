@@ -8,7 +8,6 @@ import copy
 import hashlib
 import logging
 import os
-import random
 import re
 import time
 import traceback as tb
@@ -53,6 +52,7 @@ from rest_framework.exceptions import ErrorDetail
 from rest_framework.views import Response, exception_handler
 
 import label_studio
+import secrets
 
 try:
     from sentry_sdk import capture_exception, set_tag
@@ -242,7 +242,7 @@ def sample_query(q, sample_size):
     if n == 0:
         raise ValueError("Can't sample from empty query")
     ids = q.values_list('id', flat=True)
-    random_ids = random.sample(list(ids), sample_size)
+    random_ids = secrets.SystemRandom().sample(list(ids), sample_size)
     return q.filter(id__in=random_ids)
 
 

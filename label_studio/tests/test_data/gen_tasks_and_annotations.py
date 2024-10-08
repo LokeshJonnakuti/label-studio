@@ -1,5 +1,7 @@
 """This file and its contents are licensed under the Apache License 2.0. Please see the included NOTICE for copyright information and LICENSE for a copy of the license.
 """
+import secrets
+
 """
 this script
 generates
@@ -10,7 +12,6 @@ to be bulk imported in project
 """
 
 import os
-import random as r
 
 from django.conf import settings
 
@@ -34,7 +35,7 @@ def gen_tasks(user_id):
     for t in range(tasks_n):
         tasks.append(task_template_start % i)
         for c in range(annotations_n):
-            tasks.append(tc_template % (j, r.choices(label_choices)[0], user_id))
+            tasks.append(tc_template % (j, secrets.SystemRandom().choices(label_choices)[0], user_id))
             if c < annotations_n - 1:
                 tasks.append(',')
             j += 1
